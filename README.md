@@ -139,36 +139,34 @@ df[categorical_columns] = df[categorical_columns].apply(lambda x: x.cat.codes)
 df[categorical_columns]
 ```
 ![image](https://github.com/user-attachments/assets/142bff04-a66d-45ea-a074-8dcf75d4a58f)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+X = df.drop(columns=['SalStat'])
+y = df['SalStat']
+logreg = LogisticRegression()
+n_features_to_select = 6
+rfe = RFE(estimator=logreg, n_features_to_select=n_features_to_select)
+rfe.fit(X, y)
+```
+![image](https://github.com/user-attachments/assets/399f692f-fbd7-4c33-b640-21282cb5aff7)
+```
+selected_features = X.columns[rfe.support_]
+print("Selected features using RFE:")
+print(selected_features)
+```
+![image](https://github.com/user-attachments/assets/5419fc83-72e9-4ad8-b5c2-57d0defc154d)
+```
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+X_selected = X[selected_features]
+X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.3, random_state=42)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+y_pred = rf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model accuracy using Fisher Score selected features: {accuracy}")
+```
+![image](https://github.com/user-attachments/assets/99f6bf08-b32c-4735-846b-604dfc8ccefa)
 
 # RESULT:
 Thus,Feature selection and Feature scaling has been used on the given dataset.
